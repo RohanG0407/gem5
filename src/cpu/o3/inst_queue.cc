@@ -45,6 +45,7 @@
 #include <vector>
 
 #include "base/logging.hh"
+#include "cpu/o3/comp_simp.hh"
 #include "cpu/o3/dyn_inst.hh"
 #include "cpu/o3/fu_pool.hh"
 #include "cpu/o3/limits.hh"
@@ -812,6 +813,12 @@ InstructionQueue::scheduleReadyInsts()
             continue;
         }
 
+        Cycles override_latency = Cycles(1);
+        bool override = false;
+
+        CompSimp compSimp;
+        override = compSimp.Anaylze(issuing_inst, &override_latency);
+
         int idx = FUPool::NoCapableFU;
         Cycles op_latency = Cycles(1);
         ThreadID tid = issuing_inst->threadNumber;
@@ -830,12 +837,22 @@ InstructionQueue::scheduleReadyInsts()
             }
         }
 
+        if (override) {
+          DPRINTF(IQ, "IQ: Overriding latency from %d to %d\n",
+            op_latency, override_latency);
+          op_latency = override_latency;
+        }
+
         // If we have an instruction that doesn't require a FU, or a
         // valid FU, then schedule for execution.
         if (idx != FUPool::NoFreeFU) {
             if (op_latency == Cycles(1)) {
                 i2e_info->size++;
                 instsToExecute.push_back(issuing_inst);
+
+                DPRINTF(IEW, "Scheduling FU completion for [sn:%llu] "
+                        "to cycle %d for op_class %d\n", issuing_inst->seqNum,
+                        cpu->clockEdge(Cycles(op_latency - 1)), op_class);
 
                 // Add the FU onto the list of FU's to be freed next
                 // cycle if we used one.
@@ -847,6 +864,10 @@ InstructionQueue::scheduleReadyInsts()
                 ++wbOutstanding;
                 FUCompletion *execution = new FUCompletion(issuing_inst,
                                                            idx, this);
+
+                DPRINTF(IEW, "Scheduling FU completion for [sn:%llu] "
+                        "to cycle %d for op_class %d\n", issuing_inst->seqNum,
+                        cpu->clockEdge(Cycles(op_latency - 1)), op_class);
 
                 cpu->schedule(execution,
                               cpu->clockEdge(Cycles(op_latency - 1)));

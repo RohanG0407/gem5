@@ -354,6 +354,10 @@ DynInst::execute()
     bool no_squash_from_TC = thread->noSquashFromTC;
     thread->noSquashFromTC = true;
 
+    // print out the instruction
+    DPRINTF(IEW, "DynInst: Executing instruction: %s\n",
+            staticInst->disassemble(pc->instAddr()));
+
     fault = staticInst->execute(this, traceData);
 
     thread->noSquashFromTC = no_squash_from_TC;
