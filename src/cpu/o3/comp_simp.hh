@@ -26,10 +26,10 @@ class CompSimp
         msub,
         smulh,
         umulh,
-        error
+        error_intmult
     };
 
-    IntMultOpSupported hashit(std::string const& inString) {
+    IntMultOpSupported intmult_hashit(std::string const& inString) {
         if (inString == "smaddl") return smaddl;
         if (inString == "smsubl") return smsubl;
         if (inString == "umaddl") return umaddl;
@@ -39,10 +39,25 @@ class CompSimp
         if (inString == "smulh") return smulh;
         if (inString == "umulh") return umulh;
 
-        return error;
+        return error_intmult;
+    };
+
+    enum IntDivOpSupported
+    {
+        sdiv,
+        udiv,
+        error_intdiv
+    };
+
+    IntDivOpSupported intdiv_hashit(std::string const& inString) {
+        if (inString == "sdiv") return sdiv;
+        if (inString == "udiv") return udiv;
+
+        return error_intdiv;
     };
 
     bool IntMultOpAnalysis(DynInstPtr issuing_inst, Cycles* override_latency);
+    bool IntDivOpAnalysis(DynInstPtr issuing_inst, Cycles* override_latency);
 
   public:
     CompSimp();

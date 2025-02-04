@@ -21,17 +21,51 @@ CompSimp::~CompSimp()
 }
 
 bool
+CompSimp::IntDivOpAnalysis(DynInstPtr issuing_inst, Cycles* override_latency)
+{
+    StaticInstPtr static_inst = issuing_inst->staticInst;
+    bool override = false;
+
+    DPRINTF(IQ, "SRC Regs %d\n", issuing_inst->numSrcRegs());
+
+    switch(intdiv_hashit(static_inst->getName())) {
+      case sdiv:
+      case udiv:
+        for (int i = 0; i < issuing_inst->numSrcRegs(); ++i) {
+          RegVal src_reg_val = issuing_inst->
+            getRegOperand(issuing_inst->staticInst.get(), i);
+          DPRINTF(IQ, "Src Reg %i: %d\n", i, src_reg_val);
+          // fast pass if src reg 1 (dividend) is 0
+          if (i == 0) {
+              if (src_reg_val == 0) {
+                  *override_latency = Cycles(1);
+                  return true;
+              }
+          } else if (i == 1) { // fast pass if src reg 2 (divisor) is 1
+              if (src_reg_val == 1) {
+                  *override_latency = Cycles(1);
+                  return true;
+              }
+          }
+        }
+        break;
+      default:
+          panic("IntDivOpAnalysis: Unsupported instruction type\n");
+          break;
+    }
+
+    return override;
+}
+
+bool
 CompSimp::IntMultOpAnalysis(DynInstPtr issuing_inst, Cycles* override_latency)
 {
     StaticInstPtr static_inst = issuing_inst->staticInst;
     bool override = false;
 
-    DPRINTF(IQ, "IQ: Processing instruction: %s\n",
-      issuing_inst->staticInst->
-      disassemble(issuing_inst->pcState().instAddr()));
     DPRINTF(IQ, "SRC Regs %d\n", issuing_inst->numSrcRegs());
 
-    switch(hashit(static_inst->getName())) {
+    switch(intmult_hashit(static_inst->getName())) {
       case smaddl:
       case smsubl:
       case umaddl:
@@ -79,8 +113,14 @@ CompSimp::Anaylze(DynInstPtr issuing_inst, Cycles* override_latency)
 {
     bool override = false;
 
+      DPRINTF(IQ, "CompSimp: Analyzing instruction: %s\n",
+        issuing_inst->staticInst->
+            disassemble(issuing_inst->pcState().instAddr()));
+
     if (issuing_inst->opClass() == IntMultOp) {
         override = IntMultOpAnalysis(issuing_inst, override_latency);
+    } else if (issuing_inst->opClass() == IntDivOp) {
+        override = IntDivOpAnalysis(issuing_inst, override_latency);
     }
 
 
