@@ -566,6 +566,10 @@ ISA::readMiscReg(RegIndex idx)
         {
             return miscRegs[MISCREG_CPSR] & 0xc;
         }
+      case MISCREG_DIT:
+        {
+            return miscRegs[MISCREG_CPSR] & 0x100000;
+        }
       case MISCREG_PAN:
         {
             return miscRegs[MISCREG_CPSR] & 0x400000;
@@ -1271,6 +1275,17 @@ ISA::setMiscReg(RegIndex idx, RegVal val)
                 idx = MISCREG_CPSR;
             }
             break;
+          case MISCREG_DIT:
+            {
+                // DIT is affecting data accesses
+                getMMUPtr(tc)->invalidateMiscReg();
+
+                CPSR cpsr = miscRegs[MISCREG_CPSR];
+                cpsr.dit = (uint8_t) ((CPSR) newVal).dit;
+                newVal = cpsr;
+                idx = MISCREG_CPSR;
+            }
+            break;
           case MISCREG_PAN:
             {
                 // PAN is affecting data accesses
@@ -1667,7 +1682,7 @@ ISA::handleLockedSnoop(ExecContext *xc, PacketPtr pkt, Addr cacheBlockMask)
 }
 
 void
-ISA::handleLockedRead(const RequestPtr &req)
+ISA::handleLockedRead(const RequestPtr &req) 
 {
     tc->setMiscReg(MISCREG_LOCKADDR, req->getPaddr());
     tc->setMiscReg(MISCREG_LOCKFLAG, true);

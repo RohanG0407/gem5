@@ -601,6 +601,17 @@ let {{
         Cpsr = cpsr;
     ''')
 
+    buildMsrImmInst("msr", "MsrImmDIT64", '''
+        CPSR cpsr = Cpsr;
+        if (imm) {
+          cpsr.dit = cpsr.dit | imm;
+        } else {
+          cpsr.dit = cpsr.dit & ~imm;
+        }
+
+        Cpsr = cpsr;
+    ''')
+
     def buildDataXCompInst(mnem, instType, suffix, code):
         global header_output, decoder_output, exec_output
         templateBase = "DataXCond%s" % instType

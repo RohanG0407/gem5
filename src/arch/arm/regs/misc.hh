@@ -1216,6 +1216,7 @@ namespace ArmISA
         MISCREG_VDISR_EL2,
 
         // PSTATE
+        MISCREG_DIT,
         MISCREG_PAN,
         MISCREG_UAO,
 
@@ -2953,6 +2954,7 @@ namespace ArmISA
         "vdisr_el2",
 
         // PSTATE
+        "dit",
         "pan",
         "uao",
     };

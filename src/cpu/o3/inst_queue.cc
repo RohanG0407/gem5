@@ -48,6 +48,7 @@
 #include "cpu/o3/comp_simp.hh"
 #include "cpu/o3/dyn_inst.hh"
 #include "cpu/o3/fu_pool.hh"
+#include "arch/arm/regs/misc.hh"
 #include "cpu/o3/limits.hh"
 #include "debug/IQ.hh"
 #include "enums/OpClass.hh"
@@ -818,6 +819,9 @@ InstructionQueue::scheduleReadyInsts()
 
         CompSimp compSimp;
         override = compSimp.Anaylze(issuing_inst, &override_latency);
+
+        //const uint64_t pf_r0 = issuing_inst->thread->tc->readMiscReg(gem5::ArmISA::MISCREG_ID_AA64PFR0_EL1);
+        
 
         int idx = FUPool::NoNeedFU;
         Cycles op_latency = Cycles(1);

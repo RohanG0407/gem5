@@ -1,4 +1,7 @@
 #include "cpu/o3/comp_simp.hh"
+#include "cpu/o3/thread_context.hh"
+#include "arch/arm/regs/misc.hh"
+
 
 #include "debug/IQ.hh"
 
@@ -113,9 +116,17 @@ CompSimp::Anaylze(DynInstPtr issuing_inst, Cycles* override_latency)
 {
     bool override = false;
 
-      DPRINTF(IQ, "CompSimp: Analyzing instruction: %s\n",
-        issuing_inst->staticInst->
-            disassemble(issuing_inst->pcState().instAddr()));
+    gem5::ThreadContext *tc = issuing_inst->thread->getTC();
+    const ArmISA::CPSR cpsr = tc->readMiscRegNoEffect(gem5::ArmISA::MISCREG_CPSR);
+
+    DPRINTF(IQ, "CompSimp: Analyzing instruction: %s\n",
+      issuing_inst->staticInst->
+          disassemble(issuing_inst->pcState().instAddr()));
+
+    if(cpsr.dit) {
+        DPRINTF(IQ, "CompSimp: DIT is set skipping fast pass!\n");
+        return false;
+    }
 
     if (issuing_inst->opClass() == IntMultOp) {
         override = IntMultOpAnalysis(issuing_inst, override_latency);

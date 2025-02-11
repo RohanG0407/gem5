@@ -355,8 +355,14 @@ DynInst::execute()
     thread->noSquashFromTC = true;
 
     // print out the instruction
+    const std::string disasm = staticInst->disassemble(pc->instAddr());
     DPRINTF(IEW, "DynInst: Executing instruction: %s\n",
-            staticInst->disassemble(pc->instAddr()));
+            disasm);
+
+    // if msr in disasm print it out
+    // if(disasm.find("msr") != std::string::npos) {
+    //     DPRINTF(IEW, "DynInst: Executing instruction: %s\n", disasm);
+    // }
 
     fault = staticInst->execute(this, traceData);
 

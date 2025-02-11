@@ -97,6 +97,7 @@ class ArmExtension(ScopedEnum):
         "FEAT_FLAGM",
         "FEAT_IDST",
         "FEAT_TTST",
+        "FEAT_DIT", # Mandatory in Armv8.4
         # Armv8.5
         "FEAT_FLAGM2",
         "FEAT_RNG",
