@@ -3,5 +3,15 @@
         "src/python",
         "ext",
         "tests"
-    ]
+    ],
+    "files.associations": {
+        "*.inc": "cpp",
+        "*.tcc": "cpp",
+        "chrono": "cpp",
+        "string_view": "cpp",
+        "variant": "cpp",
+        "functional": "cpp",
+        "*.def": "cpp",
+        "numeric": "cpp"
+    }
 }

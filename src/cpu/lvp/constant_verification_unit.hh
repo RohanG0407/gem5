@@ -56,127 +56,128 @@ typedef std::chrono::high_resolution_clock::time_point TimePoint;
  *             load address stored in the CAM.
  */
 
-/**
- * @brief      Data stored in every entry of the CVU CAM
- */
-struct CAMEntry {
-	Addr lvpt_index;
-	Addr pc;
-	Addr load_address;
-	TimePoint entry;
-	TimePoint access;
-};
-
-class ConstantVerificationUnit : public SimObject {
-public:
-	ConstantVerificationUnit(ConstantVerificationUnitParams *p);
-
-	~ConstantVerificationUnit();
-
+namespace gem5 {
 	/**
-	 * @brief      A store address will be provided to the CVU which will then
-	 * 			   search the CAM and invalidate every entry which matches the
-	 * 			   input address. This will also generate the control signals
-	 * 			   required for communicating with the LCT.
-	 *
-	 * @param[in]  address  The store address
+	 * @brief      Data stored in every entry of the CVU CAM
 	 */
-	void processStoreAddress(ThreadID tid, Addr address);
+	struct CAMEntry {
+		Addr lvpt_index;
+		Addr pc;
+		Addr load_address;
+		TimePoint entry;
+		TimePoint access;
+	};
 
-	/**
-	 * @brief      Check if a load address classified as constant is present in
-	 *  		   the CVU CAM.
-	 *
-	 * @param[in]  pc         The PC for this load instruction
-	 * @param[in]  lvptIndex  The lvpt index corresponding to that load address
-	 * @param[in]  tid        Thread ID
-	 *
-	 * @return     True if the load address, LVPT index pair exist in the CAM
-	 * 			   False otherwise
-	 */
-	bool processLoadAddress(Addr pc, Addr lvptIndex, ThreadID tid);
+	class ConstantVerificationUnit : public SimObject {
+	public:
+		ConstantVerificationUnit(ConstantVerificationUnitParams *p);
 
-	/**
-	 * @brief      Inserts info of a new constant load into the CVU CAM
-	 *
-	 * @param[in]  pc         Instruction address
-	 * @param[in]  address    The load address
-	 * @param[in]  lvptIndex  The lvpt index
-	 * @param[in]  tid        The tid
-	 *
-	 * @return     True if the update is successful
-	 */
-	bool updateConstLoad(Addr pc, Addr address, Addr lvptIndex, ThreadID tid);
+		~ConstantVerificationUnit();
 
-	/**
-	 * @brief      Replaces an entry in the CVU CAM with a new one according to
-	 *             a replacement policy
-	 *
-	 * @param[in]  new_entry  The new entry
-	 * @param[in]  tid        The tid
-	 */
-	void replaceBlock(struct CAMEntry new_entry, ThreadID tid);
+		/**
+		 * @brief      A store address will be provided to the CVU which will then
+		 * 			   search the CAM and invalidate every entry which matches the
+		 * 			   input address. This will also generate the control signals
+		 * 			   required for communicating with the LCT.
+		 *
+		 * @param[in]  address  The store address
+		 */
+		void processStoreAddress(ThreadID tid, Addr address);
 
-	/**
-	 * @brief      Print stats
-	 */
-	void regStats() override;
+		/**
+		 * @brief      Check if a load address classified as constant is present in
+		 *  		   the CVU CAM.
+		 *
+		 * @param[in]  pc         The PC for this load instruction
+		 * @param[in]  lvptIndex  The lvpt index corresponding to that load address
+		 * @param[in]  tid        Thread ID
+		 *
+		 * @return     True if the load address, LVPT index pair exist in the CAM
+		 * 			   False otherwise
+		 */
+		bool processLoadAddress(Addr pc, Addr lvptIndex, ThreadID tid);
 
-private:
-	/**
-	 * The CVU Content Addressable Memory;
-	 * If a store address is found in this memory, the corresponding entry is
-	 * invalidated and the invalidation also triggers an update routine which
-	 * tells the LCT that this load address is no longer constant.
-	 * The vector stores an ordered pair (load address, LVPT index)
-	 */
-	std::list<struct CAMEntry> _cvuCAM[64];
+		/**
+		 * @brief      Inserts info of a new constant load into the CVU CAM
+		 *
+		 * @param[in]  pc         Instruction address
+		 * @param[in]  address    The load address
+		 * @param[in]  lvptIndex  The lvpt index
+		 * @param[in]  tid        The tid
+		 *
+		 * @return     True if the update is successful
+		 */
+		bool updateConstLoad(Addr pc, Addr address, Addr lvptIndex, ThreadID tid);
 
-	/**
-	 * Number of entries in the CVU CAM
-	 */
-	uint32_t _numEntries;
+		/**
+		 * @brief      Replaces an entry in the CVU CAM with a new one according to
+		 *             a replacement policy
+		 *
+		 * @param[in]  new_entry  The new entry
+		 * @param[in]  tid        The tid
+		 */
+		void replaceBlock(struct CAMEntry new_entry, ThreadID tid);
 
-	/**
-	 * Number of loads marked "constant" which were incorrectly predicted.
-	 */
-	Stats::Scalar _numConstantHits;
+		/**
+		 * @brief      Print stats
+		 */
+		void regStats() override;
 
-	/**
-	 * Number of loads marked "constant" that were correctly predicted.
-	 */
-	Stats::Scalar _numConstantMiss;
+	private:
+		/**
+		 * The CVU Content Addressable Memory;
+		 * If a store address is found in this memory, the corresponding entry is
+		 * invalidated and the invalidation also triggers an update routine which
+		 * tells the LCT that this load address is no longer constant.
+		 * The vector stores an ordered pair (load address, LVPT index)
+		 */
+		std::list<struct CAMEntry> _cvuCAM[64];
 
-	/**
-	 * Number of store addresses which hit in the CVU CAM
-	 */
-	Stats::Scalar _numStoreHits;
+		/**
+		 * Number of entries in the CVU CAM
+		 */
+		uint32_t _numEntries;
 
-	/**
-	 * Number of store addresses which missed in the CVU CAM.
-	 */
-	Stats::Scalar _numStoreMiss;
+		/**
+		 * Number of loads marked "constant" which were incorrectly predicted.
+		 */
+		statistics::Scalar _numConstantHits;
 
-	/**
-	 * Replacement policy of the CAM
-	 */
-	uint8_t _replacementPolicy;
+		/**
+		 * Number of loads marked "constant" that were correctly predicted.
+		 */
+		statistics::Scalar _numConstantMiss;
 
-	/**
-	 * Number of CAM blocks replaced.
-	 */
-	Stats::Scalar _numReplacements;
+		/**
+		 * Number of store addresses which hit in the CVU CAM
+		 */
+		statistics::Scalar _numStoreHits;
 
-	/**
-	 * Total stores processed by the CVU
-	 */
-	Stats::Formula _numStoreAccesses;
+		/**
+		 * Number of store addresses which missed in the CVU CAM.
+		 */
+		statistics::Scalar _numStoreMiss;
 
-	/**
-	 * Total Loads processed by the CVU
-	 */
-	Stats::Formula _numLoadAccesses;
-};
+		/**
+		 * Replacement policy of the CAM
+		 */
+		uint8_t _replacementPolicy;
 
+		/**
+		 * Number of CAM blocks replaced.
+		 */
+		statistics::Scalar _numReplacements;
+
+		/**
+		 * Total stores processed by the CVU
+		 */
+		statistics::Formula _numStoreAccesses;
+
+		/**
+		 * Total Loads processed by the CVU
+		 */
+		statistics::Formula _numLoadAccesses;
+	};
+}
 
 #endif

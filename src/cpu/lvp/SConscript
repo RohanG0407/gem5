@@ -29,7 +29,7 @@
 
 Import('*')
 
-SimObject('LoadValuePredictionUnit.py')
+SimObject('LoadValuePredictionUnit.py', sim_objects=['LoadClassificationTable', 'LoadValuePredictionTable', 'ConstantVerificationUnit', 'LoadValuePredictionUnit'])
 
 Source('load_value_prediction_unit.cc')
 Source('load_value_prediction_table.cc')
