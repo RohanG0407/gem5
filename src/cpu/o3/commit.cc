@@ -1269,6 +1269,18 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
                                  head_inst->renamedDestIdx(i));
     }
 
+    // check if MSR DIT got commit and update the inflightDIT
+    const std::string disasm =  head_inst->staticInst->disassemble(
+      head_inst->pcState().instAddr());
+
+
+    assert(toIEW->commitInfo[tid].ditInflightCommited < 8);
+
+    if(disasm.find("msr") != std::string::npos && disasm.find("dit") != std::string::npos) {
+      DPRINTF(Commit, "Commit: Commiting MSR DIT instruction: %s\n", disasm);
+      toIEW->commitInfo[tid].ditInflightCommited += 1;
+    }
+
     // hardware transactional memory
     // the HTM UID is purely for correctness and debugging purposes
     if (head_inst->isHtmStart())

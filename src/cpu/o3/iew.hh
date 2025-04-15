@@ -332,6 +332,8 @@ class IEW
     /** Queue of all instructions coming from rename this cycle. */
     std::queue<DynInstPtr> insts[MaxThreads];
 
+    uint8_t ditInflight[MaxThreads];
+
     /** Skid buffer between rename and IEW. */
     std::queue<DynInstPtr> skidBuffer[MaxThreads];
 

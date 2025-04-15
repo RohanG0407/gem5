@@ -80,7 +80,7 @@ struct DecodeStruct
 struct RenameStruct
 {
     int size;
-
+    uint8_t ditInflight[MaxThreads];
     DynInstPtr insts[MaxWidth];
 };
 
@@ -212,6 +212,8 @@ struct TimeStruct
         /// Hack for now to send back an strictly ordered access to
         /// the IEW stage.
         bool strictlyOrdered; // *I
+
+        uint8_t ditInflightCommited; // *I
 
     };
 

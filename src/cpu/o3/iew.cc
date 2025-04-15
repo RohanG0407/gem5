@@ -107,6 +107,7 @@ IEW::IEW(CPU *_cpu, const BaseO3CPUParams &params)
     for (ThreadID tid = 0; tid < MaxThreads; tid++) {
         dispatchStatus[tid] = Running;
         fetchRedirect[tid] = false;
+        ditInflight[tid] = 0;
     }
 
     updateLSQNextCycle = false;
@@ -759,6 +760,8 @@ IEW::emptyRenameInsts(ThreadID tid)
 
         insts[tid].pop();
     }
+
+    ditInflight[tid] = 0;
 }
 
 void
@@ -1414,6 +1417,9 @@ IEW::tick()
 
         DPRINTF(IEW,"Issue: Processing [tid:%i]\n",tid);
 
+        ditInflight[tid] += fromRename->ditInflight[tid];
+        ditInflight[tid] -= fromCommit->commitInfo[tid].ditInflightCommited;
+
         checkSignalsAndUpdate(tid);
         dispatch(tid);
     }
@@ -1426,7 +1432,7 @@ IEW::tick()
         // Have the instruction queue try to schedule any ready instructions.
         // (In actuality, this scheduling is for instructions that will
         // be executed next cycle.)
-        instQueue.scheduleReadyInsts();
+        instQueue.scheduleReadyInsts(ditInflight);
 
         // Also should advance its own time buffers if the stage ran.
         // Not the best place for it, but this works (hopefully).

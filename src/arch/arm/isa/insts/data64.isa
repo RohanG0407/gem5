@@ -576,9 +576,15 @@ let {{
             }
 
         '''
+        if inst_name == "MsrImmDIT64":
+          instFlags = []
+        else:
+          instFlags = ["IsSerializeAfter", "IsNonSpeculative"]
+
         msrIop = ArmInstObjParams("msr", inst_name, "MiscRegImmOp64",
-                                  msrImmPermission + code,
-                                  ["IsSerializeAfter", "IsNonSpeculative"])
+                                  { 'code' : msrImmPermission + code,
+                                    'op_class': "MsrOp"},
+                                  instFlags)
         header_output += MiscRegOp64Declare.subst(msrIop)
         decoder_output += MiscRegOp64Constructor.subst(msrIop)
         exec_output += BasicExecute.subst(msrIop)
@@ -606,7 +612,7 @@ let {{
         if (imm) {
           cpsr.dit = cpsr.dit | imm;
         } else {
-          cpsr.dit = cpsr.dit & ~imm;
+          cpsr.dit = cpsr.dit & imm;
         }
 
         Cpsr = cpsr;

@@ -224,7 +224,7 @@ class InstructionQueue
      * Schedules ready instructions, adding the ready ones (oldest first) to
      * the queue to execute.
      */
-    void scheduleReadyInsts();
+    void scheduleReadyInsts(uint8_t ditInflight[MaxThreads]);
 
     /** Schedules a single specific non-speculative instruction. */
     void scheduleNonSpec(const InstSeqNum &inst);
@@ -560,6 +560,7 @@ class InstructionQueue
         statistics::Scalar intAluAccesses;
         statistics::Scalar fpAluAccesses;
         statistics::Scalar vecAluAccesses;
+        statistics::Scalar compSimpOverrides;
     } iqIOStats;
 };
 

@@ -1191,7 +1191,7 @@ let {{
     isbIop = ArmInstObjParams("isb", "Isb", "ImmOp",
                               { "code": isbCode,
                                 "predicate_test": predicateTest},
-                              ['IsSquashAfter'])
+                              ['IsSerializeBefore', 'IsNonSpeculative'])
     header_output += ImmOpDeclare.subst(isbIop)
     decoder_output += ImmOpConstructor.subst(isbIop)
     exec_output += PredOpExecute.subst(isbIop)

@@ -1,0 +1,6 @@
+cd polybench_lin_alg_kernels/ && ../../build/ARM/gem5.fast --outdir=2mm_baseline ../../gem5-configs-395t-2025sp/se_custom_arm_binary.py --input-bin "2mm_time"
+cd polybench_lin_alg_kernels/ && ../../build/ARM/gem5.fast --outdir=3mm_baseline ../../gem5-configs-395t-2025sp/se_custom_arm_binary.py --input-bin "3mm_time"
+cd polybench_lin_alg_kernels/ && ../../build/ARM/gem5.fast --outdir=atax_baseline ../../gem5-configs-395t-2025sp/se_custom_arm_binary.py --input-bin "atax_time"
+cd polybench_lin_alg_kernels/ && ../../build/ARM/gem5.fast --outdir=bicg_baseline ../../gem5-configs-395t-2025sp/se_custom_arm_binary.py --input-bin "bicg_time"
+cd polybench_lin_alg_kernels/ && ../../build/ARM/gem5.fast --outdir=cholesky_baseline ../../gem5-configs-395t-2025sp/se_custom_arm_binary.py --input-bin "cholesky_time"
+cd polybench_lin_alg_kernels/ && ../../build/ARM/gem5.fast --outdir=doitgen_baseline ../../gem5-configs-395t-2025sp/se_custom_arm_binary.py --input-bin "doitgen_time"

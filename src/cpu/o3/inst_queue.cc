@@ -352,7 +352,9 @@ InstructionQueue::IQIOStats::IQIOStats(statistics::Group *parent)
     ADD_STAT(fpAluAccesses, statistics::units::Count::get(),
              "Number of floating point alu accesses"),
     ADD_STAT(vecAluAccesses, statistics::units::Count::get(),
-             "Number of vector alu accesses")
+             "Number of vector alu accesses"),
+    ADD_STAT(compSimpOverrides, statistics::units::Count::get(),
+             "Number of comp simp overrides")
 {
     using namespace statistics;
     intInstQueueReads
@@ -389,6 +391,9 @@ InstructionQueue::IQIOStats::IQIOStats(statistics::Group *parent)
         .flags(total);
 
     vecAluAccesses
+        .flags(total);
+
+    compSimpOverrides
         .flags(total);
 }
 
@@ -751,7 +756,7 @@ InstructionQueue::processFUCompletion(const DynInstPtr &inst, int fu_idx)
 // lists.  Checking the top item of each list to see if it's squashed
 // wastes time and forces jumps.
 void
-InstructionQueue::scheduleReadyInsts()
+InstructionQueue::scheduleReadyInsts(uint8_t ditInflight[MaxThreads])
 {
     DPRINTF(IQ, "Attempting to schedule ready instructions from "
             "the IQ.\n");
@@ -818,10 +823,7 @@ InstructionQueue::scheduleReadyInsts()
         bool override = false;
 
         CompSimp compSimp;
-        override = compSimp.Anaylze(issuing_inst, &override_latency);
-
-        //const uint64_t pf_r0 = issuing_inst->thread->tc->readMiscReg(gem5::ArmISA::MISCREG_ID_AA64PFR0_EL1);
-        
+        override = compSimp.Anaylze(issuing_inst, &override_latency, ditInflight[issuing_inst->threadNumber]);
 
         int idx = FUPool::NoNeedFU;
         Cycles op_latency = Cycles(1);
@@ -844,6 +846,7 @@ InstructionQueue::scheduleReadyInsts()
         if (override) {
           DPRINTF(IQ, "IQ: Overriding latency from %d to %d\n",
             op_latency, override_latency);
+          iqIOStats.compSimpOverrides++;
           op_latency = override_latency;
         }
 
@@ -855,7 +858,7 @@ InstructionQueue::scheduleReadyInsts()
                 i2e_info->size++;
                 instsToExecute.push_back(issuing_inst);
 
-                DPRINTF(IEW, "Scheduling FU completion for [sn:%llu] "
+                DPRINTF(IEW, "Scheduling 1 CYCLE FU completion for [sn:%llu] "
                         "to cycle %d for op_class %d\n", issuing_inst->seqNum,
                         cpu->clockEdge(Cycles(op_latency - 1)), op_class);
 

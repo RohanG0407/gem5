@@ -29,7 +29,10 @@ from m5.objects import *
 
 # Simple ALU Instructions have a latency of 1
 class O3_ARM_v7a_Simple_Int(FUDesc):
-    opList = [OpDesc(opClass="IntAlu", opLat=1)]
+    opList = [
+        OpDesc(opClass="IntAlu", opLat=1),
+        OpDesc(opClass="Msr", opLat=10, pipelined=False),
+    ]
     count = 2
 
 

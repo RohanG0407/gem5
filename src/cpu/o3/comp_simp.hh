@@ -63,7 +63,7 @@ class CompSimp
     CompSimp();
     ~CompSimp();
 
-    bool Anaylze(DynInstPtr issuing_inst, Cycles* override_latency);
+    bool Anaylze(DynInstPtr issuing_inst, Cycles* override_latency, uint8_t ditInflight);
 };
 
 } // namespace o3

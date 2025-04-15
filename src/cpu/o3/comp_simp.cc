@@ -112,9 +112,10 @@ CompSimp::IntMultOpAnalysis(DynInstPtr issuing_inst, Cycles* override_latency)
 }
 
 bool
-CompSimp::Anaylze(DynInstPtr issuing_inst, Cycles* override_latency)
+CompSimp::Anaylze(DynInstPtr issuing_inst, Cycles* override_latency, uint8_t ditInflight)
 {
     bool override = false;
+    return false;
 
     gem5::ThreadContext *tc = issuing_inst->thread->getTC();
     const ArmISA::CPSR cpsr = tc->readMiscRegNoEffect(gem5::ArmISA::MISCREG_CPSR);
@@ -123,8 +124,13 @@ CompSimp::Anaylze(DynInstPtr issuing_inst, Cycles* override_latency)
       issuing_inst->staticInst->
           disassemble(issuing_inst->pcState().instAddr()));
 
+    DPRINTF(IQ, "CompSimp: DIT inflight: %d\n", ditInflight);
+
     if(cpsr.dit) {
         DPRINTF(IQ, "CompSimp: DIT is set skipping fast pass!\n");
+        return false;
+    } else if (ditInflight > 0) {
+        DPRINTF(IQ, "CompSimp: DIT inflight skipping fast pass! Counter value is %d\n", ditInflight);
         return false;
     }
 

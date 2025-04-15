@@ -720,6 +720,15 @@ Rename::renameInsts(ThreadID tid)
             loadsInProgress[tid]++;
         }
 
+        const std::string disasm =  inst->staticInst->disassemble(
+            inst->pcState().instAddr());
+
+        // if msr in disasm print it out
+        if(disasm.find("msr") != std::string::npos && disasm.find("dit") != std::string::npos) {
+            DPRINTF(Rename, "Rename: Renaming MSR DIT instruction: %s\n", disasm);
+            toIEW->ditInflight[tid] += 1;
+        }
+
         ++renamed_insts;
         // Notify potential listeners that source and destination registers for
         // this instruction have been renamed.
