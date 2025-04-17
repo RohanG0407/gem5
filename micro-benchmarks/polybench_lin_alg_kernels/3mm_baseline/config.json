@@ -1809,16 +1809,16 @@
                                 "name": "workload",
                                 "path": "board.processor.cores.core.workload",
                                 "cmd": [
-                                    "/home/rgangar/Documents/gem5/micro-benchmarks/bin_arm64/3mm_time"
+                                    "/home/rgangar/Documents/gem5/micro-benchmarks/polybench_lin_alg_kernels/3mm_time"
                                 ],
-                                "cwd": "/home/rgangar/Documents/gem5/micro-benchmarks/bin_arm64",
+                                "cwd": "/home/rgangar/Documents/gem5/micro-benchmarks/polybench_lin_alg_kernels",
                                 "drivers": [],
                                 "egid": 100,
                                 "env": [],
                                 "errout": "cerr",
                                 "euid": 100,
                                 "eventq_index": 0,
-                                "executable": "/home/rgangar/Documents/gem5/micro-benchmarks/bin_arm64/3mm_time",
+                                "executable": "/home/rgangar/Documents/gem5/micro-benchmarks/polybench_lin_alg_kernels/3mm_time",
                                 "gid": 100,
                                 "input": "cin",
                                 "kvmInSE": false,

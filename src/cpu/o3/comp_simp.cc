@@ -114,6 +114,7 @@ CompSimp::IntMultOpAnalysis(DynInstPtr issuing_inst, Cycles* override_latency)
 bool
 CompSimp::Anaylze(DynInstPtr issuing_inst, Cycles* override_latency, uint8_t ditInflight)
 {
+    // comment these two lines out to enable COMP_SIMP optimization
     bool override = false;
     return false;
 

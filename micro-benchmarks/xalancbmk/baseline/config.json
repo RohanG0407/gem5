@@ -2052,7 +2052,7 @@
                                             "path": "board.processor.switch.core.fuPool.FUList1.opList1",
                                             "eventq_index": 0,
                                             "opClass": "IntDiv",
-                                            "opLat": 12,
+                                            "opLat": 9,
                                             "pipelined": false
                                         },
                                         {
@@ -2142,7 +2142,7 @@
                                             "path": "board.processor.switch.core.fuPool.FUList4.opList00",
                                             "eventq_index": 0,
                                             "opClass": "SimdAdd",
-                                            "opLat": 4,
+                                            "opLat": 2,
                                             "pipelined": true
                                         },
                                         {
@@ -2152,7 +2152,7 @@
                                             "path": "board.processor.switch.core.fuPool.FUList4.opList01",
                                             "eventq_index": 0,
                                             "opClass": "SimdAddAcc",
-                                            "opLat": 4,
+                                            "opLat": 3,
                                             "pipelined": true
                                         },
                                         {
@@ -2172,7 +2172,7 @@
                                             "path": "board.processor.switch.core.fuPool.FUList4.opList03",
                                             "eventq_index": 0,
                                             "opClass": "SimdCmp",
-                                            "opLat": 4,
+                                            "opLat": 2,
                                             "pipelined": true
                                         },
                                         {
@@ -2372,7 +2372,7 @@
                                             "path": "board.processor.switch.core.fuPool.FUList4.opList23",
                                             "eventq_index": 0,
                                             "opClass": "FloatCmp",
-                                            "opLat": 5,
+                                            "opLat": 9,
                                             "pipelined": true
                                         },
                                         {
@@ -2392,7 +2392,7 @@
                                             "path": "board.processor.switch.core.fuPool.FUList4.opList25",
                                             "eventq_index": 0,
                                             "opClass": "FloatDiv",
-                                            "opLat": 9,
+                                            "opLat": 10,
                                             "pipelined": false
                                         },
                                         {
@@ -2402,7 +2402,7 @@
                                             "path": "board.processor.switch.core.fuPool.FUList4.opList26",
                                             "eventq_index": 0,
                                             "opClass": "FloatSqrt",
-                                            "opLat": 33,
+                                            "opLat": 13,
                                             "pipelined": false
                                         },
                                         {
@@ -2422,7 +2422,7 @@
                                             "path": "board.processor.switch.core.fuPool.FUList4.opList28",
                                             "eventq_index": 0,
                                             "opClass": "FloatMultAcc",
-                                            "opLat": 5,
+                                            "opLat": 4,
                                             "pipelined": true
                                         },
                                         {

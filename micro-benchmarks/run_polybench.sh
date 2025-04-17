@@ -10,4 +10,4 @@ while IFS= read -r cmd; do
     if (( job_count % max_jobs == 0 )); then
         wait  # wait for all background jobs
     fi
-done < spec_commands.txt
+done < polybench_commands.txt
