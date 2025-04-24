@@ -12,7 +12,7 @@
 #include "debug/LVP.hh"
 
 namespace gem5 {
-    LoadValuePredictionUnit::LoadValuePredictionUnit(LoadValuePredictionUnitParams *params) :
+    LoadValuePredictionUnit::LoadValuePredictionUnit(const LoadValuePredictionUnitParams *params) :
         SimObject(*params),
         loadClassificationTable(params->load_classification_table),
         loadValuePredictionTable(params->load_value_prediction_table),
@@ -141,7 +141,7 @@ namespace gem5 {
     }
 
     LoadValuePredictionUnit*
-    LoadValuePredictionUnitParams::create()
+    LoadValuePredictionUnitParams::create() const
     {
         return new LoadValuePredictionUnit(this);
     }

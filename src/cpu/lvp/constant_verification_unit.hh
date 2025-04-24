@@ -70,7 +70,7 @@ namespace gem5 {
 
 	class ConstantVerificationUnit : public SimObject {
 	public:
-		ConstantVerificationUnit(ConstantVerificationUnitParams *p);
+		ConstantVerificationUnit(const ConstantVerificationUnitParams *p);
 
 		~ConstantVerificationUnit();
 

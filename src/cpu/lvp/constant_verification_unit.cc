@@ -6,7 +6,7 @@
 #include "debug/CVU.hh"
 
 namespace gem5 {
-	ConstantVerificationUnit::ConstantVerificationUnit(ConstantVerificationUnitParams *params) :
+	ConstantVerificationUnit::ConstantVerificationUnit(const ConstantVerificationUnitParams *params) :
 		SimObject(*params), _numEntries(params->entries), _numConstantHits(0),
 		_numConstantMiss(0), _numStoreHits(0), _numStoreMiss(0),
 		_replacementPolicy(params->replacementPolicy), _numReplacements(0)
@@ -207,7 +207,7 @@ namespace gem5 {
 	}
 
 	ConstantVerificationUnit*
-	ConstantVerificationUnitParams::create()
+	ConstantVerificationUnitParams::create() const
 	{
 		return new ConstantVerificationUnit(this);
 	}

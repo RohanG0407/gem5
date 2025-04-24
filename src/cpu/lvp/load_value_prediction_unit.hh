@@ -45,7 +45,7 @@ namespace gem5 {
       statistics::Scalar numOneConstLoads;
 
     public:
-      LoadValuePredictionUnit(LoadValuePredictionUnitParams *p);
+      LoadValuePredictionUnit(const LoadValuePredictionUnitParams *p);
 
       /**
        * Looks up the given instruction address and returns

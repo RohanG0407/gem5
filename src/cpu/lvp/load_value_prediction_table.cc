@@ -126,7 +126,7 @@ namespace gem5 {
     }
 
     LoadValuePredictionTable*
-    LoadValuePredictionTableParams::create()
+    LoadValuePredictionTableParams::create() const
     {
         return new LoadValuePredictionTable(this);
     }

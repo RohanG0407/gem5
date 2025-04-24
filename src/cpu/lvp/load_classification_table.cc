@@ -164,7 +164,7 @@ namespace gem5 {
     }
 
     LoadClassificationTable*
-    LoadClassificationTableParams::create()
+    LoadClassificationTableParams::create() const
     {
         return new LoadClassificationTable(this);
     }
